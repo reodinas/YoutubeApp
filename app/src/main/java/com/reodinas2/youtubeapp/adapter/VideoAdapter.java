@@ -1,6 +1,8 @@
 package com.reodinas2.youtubeapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.reodinas2.youtubeapp.MainActivity;
+import com.reodinas2.youtubeapp.PhotoActivity;
 import com.reodinas2.youtubeapp.R;
 import com.reodinas2.youtubeapp.model.Video;
 
@@ -69,6 +73,34 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
             txtTitle = itemView.findViewById(R.id.txtTitle);
             txtDescription = itemView.findViewById(R.id.txtDescription);
             imgThumb = itemView.findViewById(R.id.imgThumb);
+
+            // 카드뷰를 클릭하면 웹을 실행시켜서 비디오를 보여준다.
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int index = getAdapterPosition();
+                    Video video = videoList.get(index);
+
+                    String url = "https://www.youtube.com/watch?v=" + video.videoId;
+
+                    ((MainActivity)context).openWebPage(url);
+                }
+            });
+
+            // 썸네일 이미지를 클릭하면, 새로운 액티비티에 큰 이미지로 보여준다.
+            imgThumb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int index = getAdapterPosition();
+                    Video video = videoList.get(index);
+
+                    Intent intent = new Intent(context, PhotoActivity.class);
+                    intent.putExtra("highUrl", video.highUrl);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
+
+
 }
